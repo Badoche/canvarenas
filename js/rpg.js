@@ -1,6 +1,6 @@
 var map = new Map("premiere");
 
-var joueur = new Personnage("exemple.png", 7, 14, DIRECTION.BAS);
+var joueur = new Personnage("loup-garou.png", 7, 14, DIRECTION.BAS);
 map.addPersonnage(joueur);
 
 window.onload = function() {
