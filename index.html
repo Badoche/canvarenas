@@ -3,6 +3,14 @@
 	<head>
 		<title>Canvarenas</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<div id="zone_chat"></div>
+		<script type="text/javascript">
+		    var map = prompt('Quelle map voulez vous charger ?');
+		</script>
+		
 		<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.compiled.js"></script><![endif]-->
 		<script type="text/javascript" src="js/json2.js"></script>
 		<script type="text/javascript" src="js/oXHR.js"></script>
@@ -10,8 +18,27 @@
 		<script type="text/javascript" src="js/classes/Map.js"></script>
 		<script type="text/javascript" src="js/classes/Personnage.js"></script>
 		<script type="text/javascript" src="js/rpg.js"></script>
-	</head>
-	<body>
-		<canvas id="canvas"></canvas>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <script type="text/javascript">
+		    // Connexion à socket.io
+            var socket = io.connect('http://localhost:8080');
+            
+            // On demande le pseudo, on l'envoie au serveur et on l'affiche dans le titre
+            var pseudo = prompt('Quel est votre pseudo ?');
+            socket.emit('nouveau_personnage', pseudo);
+            document.title = pseudo + ' - ' + document.title;
+            
+            // Quand on reçoit un message, on l'insère dans la page
+            socket.on('move_personnage', function(data) {
+                insereMessage(data.pseudo, data.message)
+            })
+            
+            // Quand un nouveau client se connecte, on affiche l'information
+            socket.on('nouveau_personnage', function(pseudo) {
+                $('#zone_chat').prepend('<p><em>' + pseudo + ' a rejoint le jeu !</em></p>');
+            })
+		</script>
 	</body>
 </html>

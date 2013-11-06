@@ -1,4 +1,4 @@
-var map = new Map("premiere");
+map = new Map(map);
 
 var joueur = new Personnage("loup-garou.png", 7, 14, DIRECTION.BAS);
 map.addPersonnage(joueur);

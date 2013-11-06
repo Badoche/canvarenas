@@ -1,0 +1,11 @@
+{
+    "name": "canvarenas",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "~3.3.4",
+        "socket.io": "~0.9.16",
+        "ent": "~0.1.0"
+    },
+    "author": "Badoche",
+    "description": "Pan pan"
+}
