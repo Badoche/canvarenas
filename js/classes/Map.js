@@ -43,6 +43,7 @@ Map.prototype.dessinerMap = function(context) {
 	// Dessin des personnages
 	for(var i = 0, l = this.personnages.length ; i < l ; i++) {
 		this.personnages[i].dessinerPersonnage(context);
+		this.personnages[i].setLife(context)
 	}
 }
 
