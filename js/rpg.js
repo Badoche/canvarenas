@@ -1,14 +1,14 @@
-var map = new Map("premiere");
+map = new Map(map);
 
-var joueur = new Personnage("exemple.png", 7, 14, DIRECTION.BAS);
+var joueur = new Personnage("loup-garou.png", 7, 14, DIRECTION.BAS);
 map.addPersonnage(joueur);
 
 window.onload = function() {
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
 	
-	canvas.width  = map.getLargeur() * 32;
-	canvas.height = map.getHauteur() * 32;
+	canvas.width  = screen.width;
+    canvas.height = screen.height;
 	
 	setInterval(function() {
 		map.dessinerMap(ctx);

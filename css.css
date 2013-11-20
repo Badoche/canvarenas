@@ -1,0 +1,25 @@
+.container-chat{
+	width:400px;
+	height:200px;
+	background-color: black;
+}
+
+.message{
+	width: 350px;
+	float:left;
+}
+
+.connection{
+	color: blue;
+}
+
+.deconnection{
+	color:yellow;
+}
+
+.dead{
+	color:red;
+}
+.basic{
+	color:white;
+}

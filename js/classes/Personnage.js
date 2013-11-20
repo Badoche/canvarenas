@@ -5,8 +5,8 @@ var DIRECTION = {
 	"HAUT"   : 3
 }
 
-var DUREE_ANIMATION = 2;
-var DUREE_DEPLACEMENT = 8;
+var DUREE_ANIMATION = 4;
+var DUREE_DEPLACEMENT = 5;
 
 function Personnage(url, x, y, direction) {
 	this.x = x; // (en cases)
