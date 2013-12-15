@@ -5,40 +5,73 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 	</head>
 	<body>
-		<canvas id="canvas"></canvas>
-		<div id="zone_chat"></div>
-		<script type="text/javascript">
-		    var map = prompt('Quelle map voulez vous charger ?');
-		</script>
-		
+		<div id="logger"></div>
+  		<form onsubmit="return (sendMessage());">
+    		<b>Message : </b><input type="text" name="message" id="message" style="width:250px;" /> <input type="submit" value="Envoyer" />
+  		</form>
+		<canvas id="canvas"></canvas>		
 		<!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.compiled.js"></script><![endif]-->
 		<script type="text/javascript" src="js/json2.js"></script>
+		<script type="text/javascript" src="js/min.js"></script>
+		<script type="text/javascript" src="js/json2.js"></script>
 		<script type="text/javascript" src="js/oXHR.js"></script>
-		<script type="text/javascript" src="js/classes/Tileset.js"></script>
-		<script type="text/javascript" src="js/classes/Map.js"></script>
-		<script type="text/javascript" src="js/classes/Personnage.js"></script>
-		<script type="text/javascript" src="js/rpg.js"></script>
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        
         <script type="text/javascript">
-		    // Connexion à socket.io
-            var socket = io.connect('http://localhost:8080');
-            
-            // On demande le pseudo, on l'envoie au serveur et on l'affiche dans le titre
-            var pseudo = prompt('Quel est votre pseudo ?');
-            socket.emit('nouveau_personnage', pseudo);
+  			// On demande le pseudo de l'utilisateur
+  			var pseudo = prompt('Votre pseudo ?') || 'Utilisateur';
+  			// On se connecte au serveur
+  			var socket = io.connect();
+  			var personnages = new Array();
+  			
+  			//on spécifie au serveur notre pseudo
+  			socket.emit('connexion', pseudo);
             document.title = pseudo + ' - ' + document.title;
-            
-            // Quand on reçoit un message, on l'insère dans la page
-            socket.on('move_personnage', function(data) {
-                insereMessage(data.pseudo, data.message)
-            })
-            
-            // Quand un nouveau client se connecte, on affiche l'information
-            socket.on('nouveau_personnage', function(pseudo) {
-                $('#zone_chat').prepend('<p><em>' + pseudo + ' a rejoint le jeu !</em></p>');
-            })
-		</script>
+
+  			// On crée l'événement getMessages pour récupérer direcement les messages sur serveur
+  			socket.on('getMessages', function (messages) {
+  			// messages est le tableau contenant tous les messages qui ont été écris sur le serveur
+  			var html = '';
+  			for (var i = 0; i < messages.length; i++)
+    			html += '<div class="line"><b>'+messages[i].pseudo+'</b> : '+messages[i].message+'</div>';
+  				document.getElementById('logger').innerHTML = html;
+  			});
+  			
+  			// On crée l'événement getCharacters pour récupérer direcement les personnages du serveur
+  			socket.on('getCharacter', function (characters) {
+  			
+  			// characters est le tableau contenant tous les personnages qui sont sur le serveur
+  				for (var i = 0; i < characters.length; i++) console.log(characters[i]);
+  				personnages = characters;
+  				console.log('Index :');
+  				console.log(personnages);
+  			});
+  			
+  			// Si quelqu'un a posté un message, le serveur nous envoie son message avec l'événement getNewMessage
+  			socket.on('getNewMessage', function (message) {
+    		document.getElementById('logger').innerHTML += '<div class="line"><b>'+message.pseudo+'</b> : '+message.message+'</div>';
+  			});
+
+  			// Quand on veut envoyer un message
+  			function sendMessage(mess) {
+  				// On récupère le message
+  				var message = document.getElementById('message').value;
+  				
+  				// On appelle l'événement se trouvant sur le serveur pour qu'il enregistre le message et qu'il l'envoie à tous les autres clients connectés
+  				socket.emit('newMessage', { 'pseudo' : pseudo, 'message' : message });
+    			
+    			// On affiche directement notre message dans notre page
+    			document.getElementById('logger').innerHTML += '<div class="line"><b>'+pseudo+'</b> : '+message+'</div>';
+    			
+    			// On vide le formulaire
+    			document.getElementById('message').value = '';
+    			
+    			// On retourne false pour ne pas que le formulaire n'actualise la page
+    			return false;
+    		}
+  </script>
+        <script type="text/javascript" src="js/classes/Tileset.js"></script>
+        <script type="text/javascript" src="js/classes/Map.js"></script>
+        <script type="text/javascript" src="js/classes/Personnage.js"></script>
+        <script type="text/javascript" src="js/rpg.js"></script>
 	</body>
 </html>

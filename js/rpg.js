@@ -1,15 +1,34 @@
-map = new Map(map);
-
-var joueur = new Personnage("loup-garou.png", 7, 14, DIRECTION.BAS);
-map.addPersonnage(joueur);
-
 window.onload = function() {
+	map = new Map('alan');
+
+	var xrandom = Math.floor((Math.random()*10)+1);
+	var yrandom = Math.floor((Math.random()*10)+1);
+	var joueur = new Personnage("loup-garou.png", xrandom, yrandom, DIRECTION.BAS);
+	
+	console.log('RPG.JS création joueur');
+	console.log(joueur);
+
+	socket.emit('addCharacter', {
+		direction: joueur.direction, 
+		etatAnimation: joueur.etatAnimation, 
+		image: joueur.image,
+		hauteur: joueur.hauteur,  
+		largeur: joueur.largeur,
+		x: joueur.x,
+		y: joueur.y
+	});
+
+
+	console.log(pseudo+' a ajouté son personnage a la position : '+xrandom+' / '+yrandom);
+
+	map.refresh();
+
 	var canvas = document.getElementById('canvas');
 	var ctx = canvas.getContext('2d');
 	
 	canvas.width  = screen.width;
     canvas.height = screen.height;
-	
+
 	setInterval(function() {
 		map.dessinerMap(ctx);
 	}, 40);
